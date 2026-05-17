@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineList Register</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Background poster grid */
+.background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    z-index: 0;
+}
+
+.background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+}
+
+/* Dark overlay */
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: 1;
+}
+
+/* Form container */
+.container {
+    position: relative;
+    z-index: 2;
+    background: rgba(0,0,0,0.85);
+    padding: 35px;
+    border-radius: 12px;
+    width: 340px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+h2 {
+    color: #e50914;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 6px;
+    background: #333;
+    color: white;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #e50914;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff1f1f;
+}
+
+a {
+    color: #bbb;
+    text-decoration: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Movie Posters Background -->
+<div class="background">
+    <!-- Hollywood -->
+    <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg">
+
+    <!-- Bollywood -->
+    <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg">
+
+    <!-- South Indian -->
+    <img src="https://image.tmdb.org/t/p/w500/8rpDcsfLJypbO6vREc0547VKqEv.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/yXNVcG0C7Oymg9F9ecXa9MWVwj8.jpg">
+
+    <!-- Repeat for grid -->
+    <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/8rpDcsfLJypbO6vREc0547VKqEv.jpg">
+    <img src="https://image.tmdb.org/t/p/w500/yXNVcG0C7Oymg9F9ecXa9MWVwj8.jpg">
+</div>
+
+<!-- Overlay -->
+<div class="overlay"></div>
+
+<!-- Form -->
+<div class="container">
+    <h2>🎬 CineList Register</h2>
+
+    <input type="text" id="username" placeholder="Username / Email" required>
+    <input type="text" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="New Password" required>
+    <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+
+    <button onclick="handleRegister()">Register</button>
+
+    <p>Already have an account? <a href="/login/">Login</a></p>
+</div>
+
+<script>
+async function handleRegister() {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+
+    // Validate input
+    if (!username || !email || !password || !confirmPassword) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+    }
+
+    const response = await fetch('/api/register/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ username, email, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        alert('Account created! Please login.');
+        window.location.href = '/login/';
+    } else {
+        alert(data.error || 'Registration failed');
+    }
+}
+</script>
+
+</body>
+</html>

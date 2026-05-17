@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineList Login</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+
+        /* Movie Background */
+        background: url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4') no-repeat center center/cover;
+
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Dark overlay for readability */
+    body::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        z-index: 0;
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+        background: rgba(255,255,255,0.1);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(12px);
+        color: white;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #e50914; /* Netflix red */
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #ff1f1f;
+    }
+
+    a {
+        color: #ccc;
+        text-decoration: none;
+        font-size: 14px;
+    }
+</style>
+
+<script>
+function loginUser() {
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🎬 CineList Login</h2>
+
+    <input type="text" id="username" placeholder="Email or Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="handleLogin()">Login</button>
+    <p>Don't have an account? <a href="/register/">Register</a></p>
+</div>
+
+<script>
+async function handleLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    const response = await fetch('/api/login/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        // Save user info and go to dashboard
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('username', data.username);
+        window.location.href = '/dashboard/';
+    } else {
+        alert(data.error);
+    }
+}
+</script>
+
+</body>
+</html>
